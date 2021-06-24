@@ -1,0 +1,113 @@
+﻿@page "/"
+
+@using ExcelCargoApp.Data
+@inject RaporService raporService
+   
+
+
+@foreach (var item in rapors){
+    {
+    if (item.MESAFE == "YAKIN" || item.MESAFE == "ŞEHİRİÇİ" || item.MESAFE == "KISA")
+    {
+        if (item.KG_DESİ < 6)
+        {
+            item.UCRET = 7;
+        }
+        if (item.KG_DESİ >= 6 && item.KG_DESİ <= 10)
+        {
+            item.UCRET = 9;
+        }
+        if (item.KG_DESİ > 10 && item.KG_DESİ <= 15)
+        {
+            item.UCRET = 13;
+        }
+        if (item.KG_DESİ > 15 && item.KG_DESİ <= 20)
+        {
+            item.UCRET = 15;
+        }
+        if (item.KG_DESİ > 20 && item.KG_DESİ <= 30)
+        {
+            item.UCRET = 21;
+        }
+    }
+    if (item.MESAFE == "UZAK" || item.MESAFE == "ORTA")
+    {
+        if (item.KG_DESİ < 6)
+        {
+            item.UCRET = 7.75;
+        }
+        if (item.KG_DESİ >= 6 && item.KG_DESİ <= 10)
+        {
+            item.UCRET = 10;
+        }
+        if (item.KG_DESİ > 10 && item.KG_DESİ <= 15)
+        {
+            item.UCRET = 14.5;
+        }
+        if (item.KG_DESİ > 15 && item.KG_DESİ <= 20)
+        {
+            item.UCRET = 16.5;
+        }
+        if (item.KG_DESİ > 20 && item.KG_DESİ <= 30)
+        {
+            item.UCRET = 23.5;
+        }
+
+
+
+        if (item.KG_DESİ >= 31)
+        {
+            item.UCRET = 23.5 + ((item.KG_DESİ - 30) * 0.78);
+        };
+    }
+}
+    @if (rapors == null)
+    {
+        <p>Not Found !</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>SIRA_NO</th>
+                    <th>ADET</th>
+                    <th>KG_DESİ</th>
+                    <th>MESAFE</th>
+                    <th>UCRET</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var rapor in rapors)
+                {
+
+
+
+                    <tr>
+                        <td>@rapor.SIRA_NO</td>
+                        <td>@rapor.ADET</td>
+                        <td>@rapor.KG_DESİ</td>
+                        <td>@rapor.MESAFE</td>
+                        <td>@rapor.UCRET</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code
+{
+    public List<Rapor> rapors = new List<Rapor>();
+    private List<Rapor> ExcelCargo()
+    {
+        rapors = raporService.GetRapors();
+        return rapors;
+
+    }
+    protected override void OnInitialized()
+    {
+        ExcelCargo();
+    }
+}

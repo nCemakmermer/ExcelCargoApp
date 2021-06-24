@@ -1,0 +1,53 @@
+﻿@page "/formul"
+
+@using ExcelCargoApp.Data
+@inject FormulService formulService
+
+
+<h1>DESİ UCRETİLERİ MESAFE FİYAT</h1>
+
+
+
+@if (formuls == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>KG-DESİ</th>
+                <th>KISA-YAKIN-ŞEHİRİÇİ</th>
+                <th>UZAK-ORTA</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var formul in formuls)
+            {
+                <tr>
+                    <td>@formul.DESI</td>
+                    <td>@formul.KISA</td>
+                    <td>@formul.UZAK</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    public List<Formul> formuls = new List<Formul>();
+    private List<Formul> ExcelCargo()
+    {
+        formuls = formulService.GetFormuls();
+        return formuls;
+
+    }
+    protected override void OnInitialized()
+    {
+        ExcelCargo();
+    }
+}
